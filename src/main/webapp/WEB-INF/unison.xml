@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tremoloConfig xmlns="http://www.tremolosecurity.com/tremoloConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tremolosecurity.com/tremoloConfig tremoloConfig.xsd">
+  <applications openSessionCookieName="openSession" openSessionTimeout="9000">
+    <application name="LoginTest" azTimeoutMillis="30000" >
+      <urls>
+        <!-- The regex attribute defines if the proxyTo tag should be interpreted with a regex or not -->
+        <!-- The authChain attribute should be the name of an authChain -->
+        <url regex="false" authChain="formloginFilter" overrideHost="true" overrideReferer="true">
+          <!-- Any number of host tags may be specified to allow for an application to work on multiple hosts.  Additionally an asterick (*) can be specified to make this URL available for ALL hosts -->
+          <host>#[OPENUNISON_HOST]</host>
+          <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
+          <filterChain>
+            <filter class="com.tremolosecurity.prelude.filters.LoginTest">
+              <!-- The path of the logout URI           -->
+              <param name="logoutURI" value="/logout"/>
+            </filter>
+          </filterChain>
+          <!-- The URI (aka path) of this URL -->
+          <uri>/</uri>
+          <!-- Tells OpenUnison how to reach the downstream application.  The ${} lets you set any request variable into the URI, but most of the time ${fullURI} is sufficient -->
+          <proxyTo>http://dnm${fullURI}</proxyTo>
+          <!-- List the various results that should happen -->
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
+          The scope may be one of group, dn, filter, dynamicGroup or custom
+          The constraint identifies what needs to be satisfied for the authorization to pass and is dependent on the scope:
+            * group - The DN of the group in OpenUnison's virtual directory (must be an instance of groupOfUniqueNames)
+            * dn - The base DN of the user or users in OpenUnison's virtual directory
+            * dynamicGroup - The DN of the dynamic group in OpenUnison's virtual directory (must be an instance of groupOfUrls)
+            * custom - An implementation of com.tremolosecurity.proxy.az.CustomAuthorization -->
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+
+        <url regex="false" authChain="formloginFilter" overrideHost="true" overrideReferer="true">
+          <!-- Any number of host tags may be specified to allow for an application to work on multiple hosts.  Additionally an asterick (*) can be specified to make this URL available for ALL hosts -->
+          <host>#[OPENUNISON_HOST]</host>
+          <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
+          <filterChain>
+
+          </filterChain>
+          <!-- The URI (aka path) of this URL -->
+          <uri>/scale</uri>
+
+          <!-- List the various results that should happen -->
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
+          The scope may be one of group, dn, filter, dynamicGroup or custom
+          The constraint identifies what needs to be satisfied for the authorization to pass and is dependent on the scope:
+            * group - The DN of the group in OpenUnison's virtual directory (must be an instance of groupOfUniqueNames)
+            * dn - The base DN of the user or users in OpenUnison's virtual directory
+            * dynamicGroup - The DN of the dynamic group in OpenUnison's virtual directory (must be an instance of groupOfUrls)
+            * custom - An implementation of com.tremolosecurity.proxy.az.CustomAuthorization -->
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+        <url regex="false" authChain="formloginFilter" overrideHost="true" overrideReferer="true">
+          <!-- Any number of host tags may be specified to allow for an application to work on multiple hosts.  Additionally an asterick (*) can be specified to make this URL available for ALL hosts -->
+          <host>#[OPENUNISON_HOST]</host>
+          <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
+          <filterChain>
+            <filter class="com.tremolosecurity.scalejs.ws.ScaleMain">
+                            <param name="canEditUser" value="false"/>
+                            <param name="displayNameAttribute" value="displayName"/>
+                            <param name="roleAttribute" value=""/>
+                            <param name="uidAttributeName" value="uid"/>
+                            <param name="workflowName" value="SaveSSHKey"/>
+                            <param name="logoutURL" value="/logout"/>
+                            <param name="showPortalOrgs" value="false"/>
+                            <param name="frontPage.text" value="This portal can be used to request access for and gain access to OpenShift"/>
+                            <param name="frontPage.title" value="OpenShift Identity Manager"/>
+                            <param name="approvalAttributeNames" value="displayName"/>
+                            <param name="approvals.displayName" value="Display Name"/>
+                            <param name="approvalAttributeNames" value="mail"/>
+                            <param name="approvals.mail" value="Email Address"/>
+                            <param name="attributeNames" value="uid"/>
+                            <param name="uid.displayName" value="UID"/>
+                            <param name="uid.readOnly" value="true"/>
+                            <param name="uid.required" value="false"/>
+                            <param name="uid.regEx" value=""/>
+                            <param name="uid.regExFailedMsg" value=""/>
+                            <param name="uid.minChars" value="0"/>
+                            <param name="uid.maxChars" value="0"/>
+                            <param name="attributeNames" value="displayName"/>
+                            <param name="displayName.displayName" value="Display Name"/>
+                            <param name="displayName.readOnly" value="true"/>
+                            <param name="displayName.required" value="false"/>
+                            <param name="displayName.regEx" value=""/>
+                            <param name="displayName.regExFailedMsg" value=""/>
+                            <param name="displayName.minChars" value="0"/>
+                            <param name="displayName.maxChars" value="0"/>
+                            <param name="attributeNames" value="mail"/>
+                            <param name="mail.displayName" value="Email Address"/>
+                            <param name="mail.readOnly" value="true"/>
+                            <param name="mail.required" value="false"/>
+                            <param name="mail.regEx" value=""/>
+                            <param name="mail.regExFailedMsg" value=""/>
+                            <param name="mail.minChars" value="0"/>
+                            <param name="mail.maxChars" value="0"/>
+                            <param name="attributeNames" value="givenName"/>
+                            <param name="givenName.displayName" value="First Name"/>
+                            <param name="givenName.readOnly" value="true"/>
+                            <param name="givenName.required" value="false"/>
+                            <param name="givenName.regEx" value=""/>
+                            <param name="givenName.regExFailedMsg" value=""/>
+                            <param name="givenName.minChars" value="0"/>
+                            <param name="givenName.maxChars" value="0"/>
+                            <param name="attributeNames" value="sn"/>
+                            <param name="sn.displayName" value="Last Name"/>
+                            <param name="sn.readOnly" value="true"/>
+                            <param name="sn.required" value="false"/>
+                            <param name="sn.regEx" value=""/>
+                            <param name="sn.regExFailedMsg" value=""/>
+                            <param name="sn.minChars" value="0"/>
+                            <param name="sn.maxChars" value="0"/>
+
+                        </filter>
+          </filterChain>
+          <!-- The URI (aka path) of this URL -->
+          <uri>/scale/main</uri>
+          <!-- Tells OpenUnison how to reach the downstream application.  The ${} lets you set any request variable into the URI, but most of the time ${fullURI} is sufficient -->
+          <proxyTo>http://dnm${fullURI}</proxyTo>
+          <!-- List the various results that should happen -->
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
+          The scope may be one of group, dn, filter, dynamicGroup or custom
+          The constraint identifies what needs to be satisfied for the authorization to pass and is dependent on the scope:
+            * group - The DN of the group in OpenUnison's virtual directory (must be an instance of groupOfUniqueNames)
+            * dn - The base DN of the user or users in OpenUnison's virtual directory
+            * dynamicGroup - The DN of the dynamic group in OpenUnison's virtual directory (must be an instance of groupOfUrls)
+            * custom - An implementation of com.tremolosecurity.proxy.az.CustomAuthorization -->
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+        <url regex="false" authChain="formloginFilter" overrideHost="true" overrideReferer="true">
+          <!-- Any number of host tags may be specified to allow for an application to work on multiple hosts.  Additionally an asterick (*) can be specified to make this URL available for ALL hosts -->
+          <host>#[OPENUNISON_HOST]</host>
+          <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
+          <filterChain>
+            <filter class="com.tremolosecurity.prelude.filters.StopProcessing" />
+          </filterChain>
+          <!-- The URI (aka path) of this URL -->
+          <uri>/logout</uri>
+          <!-- Tells OpenUnison how to reach the downstream application.  The ${} lets you set any request variable into the URI, but most of the time ${fullURI} is sufficient -->
+          <proxyTo>http://dnm${fullURI}</proxyTo>
+          <!-- List the various results that should happen -->
+          <results>
+            <azSuccess>Logout</azSuccess>
+          </results>
+          <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
+                    The scope may be one of group, dn, filter, dynamicGroup or custom
+                    The constraint identifies what needs to be satisfied for the authorization to pass and is dependent on the scope:
+                      * group - The DN of the group in OpenUnison's virtual directory (must be an instance of groupOfUniqueNames)
+                      * dn - The base DN of the user or users in OpenUnison's virtual directory
+                      * dynamicGroup - The DN of the dynamic group in OpenUnison's virtual directory (must be an instance of groupOfUrls)
+                      * custom - An implementation of com.tremolosecurity.proxy.az.CustomAuthorization -->
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+      </urls>
+      <!-- The cookie configuration determines how sessions are managed for this application -->
+      <cookieConfig>
+        <!-- The name of the session cookie for this application.  Applications that want SSO between them should have the same cookie name -->
+        <sessionCookieName>tremolosession</sessionCookieName>
+        <!-- The domain of component of the cookie -->
+        <domain>#[OPENUNISON_HOST]</domain>
+        <!-- The URL that OpenUnison will interpret as the URL to end the session -->
+        <logoutURI>/logout</logoutURI>
+        <!-- The name of the AES-256 key in the keystore to use to encrypt this session -->
+        <keyAlias>session-unison</keyAlias>
+        <!-- If set to true, the cookie's secure flag is set to true and the browser will only send this cookie over https connections -->
+        <secure>false</secure>
+        <!-- The number of secconds that the session should be allowed to be idle before no longer being valid -->
+        <timeout>900</timeout>
+        <!-- required but ignored -->
+        <scope>-1</scope>
+      </cookieConfig>
+    </application>
+  </applications>
+  <myvdConfig>WEB-INF/myvd.conf</myvdConfig>
+  <authMechs>
+    <mechanism name="loginForm">
+      <uri>/auth/formLogin</uri>
+      <className>com.tremolosecurity.proxy.auth.FormLoginAuthMech</className>
+      <init>
+      </init>
+      <params>
+        <param>FORMLOGIN_JSP</param>
+      </params>
+    </mechanism>
+    <mechanism name="anonymous">
+      <uri>/auth/anon</uri>
+      <className>com.tremolosecurity.proxy.auth.AnonAuth</className>
+      <init>
+        <!-- The RDN of unauthenticated users -->
+        <param name="userName" value="uid=Anonymous"/>
+        <!-- Any number of attributes can be added to the anonymous user -->
+        <param name="role" value="Users" />
+      </init>
+      <params>
+      </params>
+    </mechanism>
+  </authMechs>
+  <authChains>
+    <!-- An anonymous authentication chain MUST be level 0 -->
+    <chain name="anon" level="0">
+      <authMech>
+        <name>anonymous</name>
+        <required>required</required>
+        <params>
+        </params>
+      </authMech>
+    </chain>
+    <chain name="formloginFilter" level="1">
+      <authMech>
+        <name>loginForm</name>
+        <required>required</required>
+        <params>
+          <!-- Path to the login form -->
+          <param name="FORMLOGIN_JSP" value="/auth/forms/defaultForm.jsp"/>
+          <!-- Either an attribute name OR an ldap filter mapping the form parameters. If this is an ldap filter, form parameters are identified by ${parameter} -->
+          <param name="uidAttr" value="uid"/>
+          <!-- If true, the user is determined based on an LDAP filter rather than a simple user lookup -->
+          <param name="uidIsFilter" value="false"/>
+        </params>
+      </authMech>
+    </chain>
+  </authChains>
+  <resultGroups>
+    <!-- The name attribute is how the resultGroup is referenced in the URL -->
+    <resultGroup name="Logout">
+      <!-- Each result should be listed -->
+      <result>
+        <!-- The type of result, one of cookie, header or redirect -->
+        <type>redirect</type>
+        <!-- The source of the result value, one of user, static, custom -->
+        <source>static</source>
+        <!-- Name of the resuler (in this case a cookie) and the value -->
+        <value>/auth/forms/logout.jsp</value>
+      </result>
+    </resultGroup>
+  </resultGroups>
+  <keyStorePath>/etc/openunison/unisonKeyStore.jks</keyStorePath>
+  <keyStorePassword>#[OPENUNISON_KEYSTORE_PASSWORD]</keyStorePassword>
+  <provisioning>
+    <targets>
+      <target name="openshift" className="com.tremolosecurity.unison.openshiftv3.OpenShiftTarget">
+        <params>
+          <param name="url" value="#[OPENSHIFT_URL]"/>
+          <param name="userName" value="#[OPENSHIFT_USER]"/>
+          <param name="password" value="#[OPENSHIFT_PASSWORD]"/>
+        </params>
+        <targetAttribute name="gecos" source="fullName" sourceType="user"/>
+      </target>
+    </targets>
+    <workflows>
+      <workflow name="OpenShift" label="OpenShift Project $name$" description="Description - $openshift_io/display_name$" inList="true" orgid="e970818e-8889-4a87-a56d-ae1398d0b2f0">
+        <dynamicConfiguration dynamic="true" className="com.tremolosecurity.unison.openshiftv3.wf.OpenShiftWorkflows">
+          <param name="target" value="openshift"/>
+          <param name="kind" value="/oapi/v1/projects"/>
+        </dynamicConfiguration>
+        <tasks>
+          <customTask className="com.tremolosecurity.provisioning.customTasks.LoadAttributes">
+            <param name="nameAttr" value="adObjectGUID"/>
+            <param name="name" value="userPrincipalName"/>
+            <param name="name" value="mail"/>
+          </customTask>
+          <approval label="Approval for $name$">
+            <onSuccess>
+              <mapping strict="true">
+                <onSuccess>
+                  <addGroup name="$unison/az$" remove="false"/>
+                  <provision sync="false" target="openshift" setPassword="false" onlyPassedInAttributes="false">
+                    <attributes>
+                      <value>uid</value>
+                    </attributes>
+                  </provision>
+                </onSuccess>
+                <onFailure/>
+                <map>
+                  <mapping targetAttributeName="TREMOLO_USER_ID" targetAttributeSource="userPrincipalName" sourceType="user"/>
+                  <mapping targetAttributeName="mail" targetAttributeSource="mail" sourceType="user"/>
+                </map>
+              </mapping>
+            </onSuccess>
+            <onFailure/>
+            <emailTemplate>for approval</emailTemplate>
+            <approvers>
+              <rule scope="group" constraint="$unison/approver$"/>
+            </approvers>
+            <mailAttr>mail</mailAttr>
+            <failureEmailSubject>failed</failureEmailSubject>
+            <failureEmailMsg>${reason}</failureEmailMsg>
+            <escalationPolicy>
+              <escalationFailure action="leave">
+                <azRules/>
+              </escalationFailure>
+            </escalationPolicy>
+          </approval>
+        </tasks>
+      </workflow>
+    </workflows>
+    <approvalDB>
+      <driver>com.mysql.jdbc.Driver</driver>
+      <url>jdbc:mysql://#[OPENUNISON_AUDIT_DB_HOST]/unison</url>
+      <user>#[OPENUNISON_AUDIT_DB_USER]</user>
+      <password>#[OPENUNISON_AUDIT_DB_PASSWORD]</password>
+      <maxConns>10</maxConns>
+      <maxIdleConns>10</maxIdleConns>
+      <userIdAttribute>uid</userIdAttribute>
+      <approverAttributes>
+        <value>userPrincipalName</value>
+        <value>mail</value>
+        <value>givenName</value>
+        <value>sn</value>
+      </approverAttributes>
+      <userAttributes>
+        <value>userPrincipalName</value>
+        <value>mail</value>
+        <value>givenName</value>
+        <value>sn</value>
+      </userAttributes>
+      <enabled>true</enabled>
+      <smtpHost>smtp</smtpHost>
+      <smtpPort>25</smtpPort>
+      <smtpUser>
+      </smtpUser>
+      <smtpPassword>x</smtpPassword>
+      <smtpSubject>Test</smtpSubject>
+      <smtpFrom>test@test.com</smtpFrom>
+      <smtpTLS>false</smtpTLS>
+      <encryptionKey>session-tremolosession</encryptionKey>
+      <smtpUseSOCKSProxy>false</smtpUseSOCKSProxy>
+      <smtpSOCKSProxyHost>
+      </smtpSOCKSProxyHost>
+      <smtpSOCKSProxyPort>0</smtpSOCKSProxyPort>
+      <smtpLocalhost>
+      </smtpLocalhost>
+      <validationQuery>SELECT 1</validationQuery>
+      <hibernateDialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernateDialect>
+    </approvalDB>
+    <org name="System Management Portal" description="For all users with access to the systems management portal" uuid="B158BD40-0C1B-11E3-8FFD-0800200C9A66">
+      <orgs name="Auditors" description="For all auditors" uuid="2bb3b144-3c25-42cc-8600-1638fa1ab149">
+        <azRules>
+
+        </azRules>
+      </orgs>
+      <orgs name="Physical Hardware" description="Access to resources running on physical hardware" uuid="78ca7e3c-3f6c-4850-852c-96f8c40563b5">
+        <azRules/>
+      </orgs>
+      <orgs name="OpenStack" description="OpenStack related roles and reports" uuid="b37d75a0-3c4b-4bc6-a2f2-cb3b2ac0dcd9">
+        <azRules/>
+      </orgs>
+      <orgs name="Virtual Machines" description="Access for virtual machines running on openstack" uuid="73df113d-1d36-463f-8fad-8ecb05f8ede1">
+        <azRules/>
+      </orgs>
+      <orgs name="OpenStack Direct" description="Roles managed directly in openstack with no directory packing it" uuid="d1ef8804-c4ab-4016-a59d-b89098bc05c5">
+        <azRules/>
+      </orgs>
+      <orgs name="OpenShift" description="List of OpenShift projects" uuid="e970818e-8889-4a87-a56d-ae1398d0b2f0">
+        <azRules/>
+      </orgs>
+      <azRules/>
+    </org>
+    <queueConfig isUseInternalQueue="true" maxProducers="1" connectionFactory="com.tremolosecurity.provisioning.jms.providers.AwsSqsConnectionFactory" maxConsumers="1" taskQueueName="TremoloUnisonTaskQueue" smtpQueueName="TremoloUnisonSMTPQueue" encryptionKeyName="session-tremolosession"/>
+    <scheduler useDB="false" threadCount="3" instanceLabel="unison" instanceIPMask="172">
+      <scheduleDB delegateClassName="org.quartz.impl.jdbcjobstore.CUBRIDDelegate" driver="com.mysql.fabric.jdbc.FabricMySQLDriver" url="" user="" maxConnections="0" validationQuery=""/>
+      <job className="com.tremolosecurity.provisioning.scheduler.jobs.UpdateApprovalAz" name="updateapprovers" group="system">
+        <cronSchedule seconds="0" minutes="*" hours="*" dayOfMonth="*" month="*" dayOfWeek="?" year="*"/>
+        <param name="queueName" value="updateaz"/>
+      </job>
+    </scheduler>
+    <listeners>
+      <listener className="com.tremolosecurity.provisioning.listeners.UpdateApprovalAZListener" queueName="updateaz"/>
+    </listeners>
+    <reports>
+      <report orgID="B158BD40-0C1B-11E3-8FFD-0800200C9A66" name="My Open Requests" description="List of your currently open requests and the approvers responsible for acting on them" groupBy="id" groupings="true">
+        <paramater>currentUser</paramater>
+        <sql>select  approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`, concat((SELECT value FROM userAttributes WHERE userAttributes.name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE userAttributes.name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`, (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`  from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where users.userKey=? AND approvedTS is null order by approvals.createTS ASC, approvals.id ASC</sql>
+        <headerFields>Approval</headerFields>
+        <headerFields>Subject Name</headerFields>
+        <headerFields>Subject Email</headerFields>
+        <headerFields>Workflow Name</headerFields>
+        <headerFields>Workflow Label</headerFields>
+        <headerFields>Request Reason</headerFields>
+        <dataFields>First Name</dataFields>
+        <dataFields>Last Name</dataFields>
+        <dataFields>Email</dataFields>
+      </report>
+      <report orgID="B158BD40-0C1B-11E3-8FFD-0800200C9A66" name="Approvals Completed by Me" description="All approvals you approved or denied" groupBy="wid" groupings="false">
+        <paramater>currentUser</paramater>
+        <sql>select  workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`, concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`, (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvers.userKey=? order by approvals.approvedTS DESC; </sql>
+        <dataFields>Workflow Name</dataFields>
+        <dataFields>Workflow Label</dataFields>
+        <dataFields>Subject Name</dataFields>
+        <dataFields>Subject Email</dataFields>
+        <dataFields>Request Reason</dataFields>
+        <dataFields>Approval</dataFields>
+        <dataFields>Approval Result</dataFields>
+        <dataFields>Approved Date</dataFields>
+      </report>
+      <report orgID="2bb3b144-3c25-42cc-8600-1638fa1ab149" name="Open Approvals" description="Lists all of the approvals that are currently waiting action" groupBy="id" groupings="true">
+        <sql>select&#xD;
+&#xD;
+approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`,&#xD;
+concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`,&#xD;
+(SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`&#xD;
+&#xD;
+from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where approvedTS is null&#xD;
+order by approvals.createTS ASC, approvals.id ASC</sql>
+        <headerFields>Approval</headerFields>
+        <headerFields>Subject Name</headerFields>
+        <headerFields>Subject Email</headerFields>
+        <headerFields>Workflow Name</headerFields>
+        <headerFields>Workflow Label</headerFields>
+        <headerFields>Request Reason</headerFields>
+        <dataFields>First Name</dataFields>
+        <dataFields>Last Name</dataFields>
+        <dataFields>Email</dataFields>
+      </report>
+      <report orgID="2bb3b144-3c25-42cc-8600-1638fa1ab149" name="Completed Approvals" description="All approvals completed in a given set of dates" groupBy="wid" groupings="true">
+        <paramater>beginDate</paramater>
+        <paramater>endDate</paramater>
+        <sql>select &#xD;
+workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`,&#xD;
+concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`,&#xD;
+(SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason&#xD;
+from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvals.approvedTS &gt;= ? AND approvals.approvedTS &lt;= ? order by approvals.id ASC,workflows.id ASC;&#xD;
+</sql>
+        <headerFields>Workflow Name</headerFields>
+        <headerFields>Workflow Label</headerFields>
+        <headerFields>Subject Name</headerFields>
+        <headerFields>Subject Email</headerFields>
+        <headerFields>Request Reason</headerFields>
+        <dataFields>Approval</dataFields>
+        <dataFields>First Name</dataFields>
+        <dataFields>Last Name</dataFields>
+        <dataFields>Email</dataFields>
+        <dataFields>Approval Result</dataFields>
+      </report>
+      <report orgID="2bb3b144-3c25-42cc-8600-1638fa1ab149" name="Single User Change Log" description="All changes to the chosen user" groupBy="id" groupings="true">
+        <paramater>userKey</paramater>
+        <sql>select&#xD;
+(SELECT value FROM userAttributes WHERE userAttributes.name='givenName' AND userid=users.id) AS `First Name`, (SELECT value FROM userAttributes WHERE userAttributes.name='sn' AND userid=users.id) AS `Last Name`, (SELECT value FROM userAttributes WHERE userAttributes.name='mail' AND userid=users.id) AS `Email Address` ,workflows.id,&#xD;
+workflows.name as `Workflow Name`,workflows.label AS `Workflow Label`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
+auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribute' END AS `Target Type`,auditLogs.attribute AS `Name`,auditLogs.val AS `Value`&#xD;
+&#xD;
+&#xD;
+ from users inner join auditLogs on users.id=auditLogs.userid inner join auditLogType on auditLogType.id=auditLogs.actionType inner join workflows on workflows.id=auditLogs.workflow where users.userKey=?&#xD;
+ order by workflows.completeTS ASC ,workflows.id ASC , auditLogs.isEntry DESC</sql>
+        <headerFields>Workflow Name</headerFields>
+        <headerFields>Workflow Label</headerFields>
+        <headerFields>Request Reason</headerFields>
+        <headerFields>Workflow Started</headerFields>
+        <headerFields>Workflow Completed</headerFields>
+        <headerFields>First Name</headerFields>
+        <headerFields>Last Name</headerFields>
+        <headerFields>Email Address</headerFields>
+        <dataFields>Action</dataFields>
+        <dataFields>Target Type</dataFields>
+        <dataFields>Name</dataFields>
+        <dataFields>Value</dataFields>
+      </report>
+      <report orgID="2bb3b144-3c25-42cc-8600-1638fa1ab149" name="Change Log for Period" description="Changes to all users between the two selected dates" groupBy="id" groupings="true">
+        <paramater>beginDate</paramater>
+        <paramater>endDate</paramater>
+        <sql>select&#xD;
+(SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id) AS `First Name`, (SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id) AS `Last Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) AS `Email Address` ,workflows.id,&#xD;
+workflows.name as `Workflow Name`,workflows.label AS `Workflow Label`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
+auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribute' END AS `Target Type`,auditLogs.attribute AS `Name`,auditLogs.val AS `Value`&#xD;
+&#xD;
+&#xD;
+ from users inner join auditLogs on users.id=auditLogs.userid inner join auditLogType on auditLogType.id=auditLogs.actionType inner join workflows on workflows.id=auditLogs.workflow where workflows.completeTS &gt;= ? and workflows.completeTS &lt;= ?&#xD;
+ order by workflows.completeTS ASC ,workflows.id ASC , auditLogs.isEntry DESC</sql>
+        <headerFields>Workflow Name</headerFields>
+        <headerFields>Workflow Label</headerFields>
+        <headerFields>Request Reason</headerFields>
+        <headerFields>Workflow Started</headerFields>
+        <headerFields>Workflow Completed</headerFields>
+        <headerFields>First Name</headerFields>
+        <headerFields>Last Name</headerFields>
+        <headerFields>Email Address</headerFields>
+        <dataFields>Action</dataFields>
+        <dataFields>Target Type</dataFields>
+        <dataFields>Name</dataFields>
+        <dataFields>Value</dataFields>
+      </report>
+    </reports>
+  </provisioning>
+  </tremoloConfig>
