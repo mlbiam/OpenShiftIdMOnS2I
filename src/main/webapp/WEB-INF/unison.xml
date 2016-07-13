@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tremoloConfig xmlns="http://www.tremolosecurity.com/tremoloConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tremolosecurity.com/tremoloConfig tremoloConfig.xsd">
-  <applications openSessionCookieName="openSession" openSessionTimeout="9000">
-    <application name="LoginTest" azTimeoutMillis="30000" >
+<tremoloConfig xmlns="http://www.tremolosecurity.com/tremoloConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tremolosecurity.com/tremoloConfig tremoloConfig.xsd" ldapRoot="dc=domain,dc=com" groupObjectClass="groupOfNames" groupMemberAttribute="member" userObjectClass="inetOrgPerson">
+  <applications openSessionCookieName="openSession" openSessionTimeout="9000" >
+    <application name="OpenShift" azTimeoutMillis="30000" >
       <urls>
         <!-- The regex attribute defines if the proxyTo tag should be interpreted with a regex or not -->
         <!-- The authChain attribute should be the name of an authChain -->
@@ -10,7 +10,7 @@
           <host>#[OPENUNISON_HOST]</host>
           <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
           <filterChain>
-            <filter class="com.tremolosecurity.prelude.filters.LoginTest">
+            <filter class="com.tremolosecurity.prelude.filters.StopProcessing">
               <!-- The path of the logout URI           -->
               <param name="logoutURI" value="/logout"/>
             </filter>
@@ -21,8 +21,7 @@
           <proxyTo>http://dnm${fullURI}</proxyTo>
           <!-- List the various results that should happen -->
           <results>
-            <azSuccess>
-            </azSuccess>
+            <azSuccess>GoToScale</azSuccess>
           </results>
           <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
           The scope may be one of group, dn, filter, dynamicGroup or custom
@@ -32,7 +31,7 @@
             * dynamicGroup - The DN of the dynamic group in OpenUnison's virtual directory (must be an instance of groupOfUrls)
             * custom - An implementation of com.tremolosecurity.proxy.az.CustomAuthorization -->
           <azRules>
-            <rule scope="dn" constraint="o=Tremolo" />
+            <rule scope="dn" constraint="dc=domain,dc=com" />
           </azRules>
         </url>
 
@@ -59,7 +58,7 @@
             * dynamicGroup - The DN of the dynamic group in OpenUnison's virtual directory (must be an instance of groupOfUrls)
             * custom - An implementation of com.tremolosecurity.proxy.az.CustomAuthorization -->
           <azRules>
-            <rule scope="dn" constraint="o=Tremolo" />
+            <rule scope="dn" constraint="dc=domain,dc=com" />
           </azRules>
         </url>
         <url regex="false" authChain="formloginFilter" overrideHost="true" overrideReferer="true">
@@ -68,10 +67,10 @@
           <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
           <filterChain>
             <filter class="com.tremolosecurity.scalejs.ws.ScaleMain">
-                            <param name="canEditUser" value="false"/>
-                            <param name="displayNameAttribute" value="displayName"/>
-                            <param name="roleAttribute" value=""/>
-                            <param name="uidAttributeName" value="uid"/>
+                            <param name="canEditUser" value="true"/>
+                            <param name="displayNameAttribute" value="gecos"/>
+                            <param name="roleAttribute" value="roles"/>
+                            <param name="uidAttributeName" value="adObjectGUID"/>
                             <param name="workflowName" value="SaveSSHKey"/>
                             <param name="logoutURL" value="/logout"/>
                             <param name="showPortalOrgs" value="false"/>
@@ -81,22 +80,30 @@
                             <param name="approvals.displayName" value="Display Name"/>
                             <param name="approvalAttributeNames" value="mail"/>
                             <param name="approvals.mail" value="Email Address"/>
+                            <param name="attributeNames" value="ipaSshPubKey"/>
+                            <param name="ipaSshPubKey.displayName" value="SSH Key"/>
+                            <param name="ipaSshPubKey.readOnly" value="false"/>
+                            <param name="ipaSshPubKey.required" value="true"/>
+                            <param name="ipaSshPubKey.regEx" value=".*"/>
+                            <param name="ipaSshPubKey.regExFailedMsg" value=""/>
+                            <param name="ipaSshPubKey.minChars" value="0"/>
+                            <param name="ipaSshPubKey.maxChars" value="0"/>
                             <param name="attributeNames" value="uid"/>
-                            <param name="uid.displayName" value="UID"/>
+                            <param name="uid.displayName" value="SSH Login"/>
                             <param name="uid.readOnly" value="true"/>
                             <param name="uid.required" value="false"/>
                             <param name="uid.regEx" value=""/>
                             <param name="uid.regExFailedMsg" value=""/>
                             <param name="uid.minChars" value="0"/>
                             <param name="uid.maxChars" value="0"/>
-                            <param name="attributeNames" value="displayName"/>
-                            <param name="displayName.displayName" value="Display Name"/>
-                            <param name="displayName.readOnly" value="true"/>
-                            <param name="displayName.required" value="false"/>
-                            <param name="displayName.regEx" value=""/>
-                            <param name="displayName.regExFailedMsg" value=""/>
-                            <param name="displayName.minChars" value="0"/>
-                            <param name="displayName.maxChars" value="0"/>
+                            <param name="attributeNames" value="gecos"/>
+                            <param name="gecos.displayName" value="Display Name"/>
+                            <param name="gecos.readOnly" value="true"/>
+                            <param name="gecos.required" value="false"/>
+                            <param name="gecos.regEx" value=""/>
+                            <param name="gecos.regExFailedMsg" value=""/>
+                            <param name="gecos.minChars" value="0"/>
+                            <param name="gecos.maxChars" value="0"/>
                             <param name="attributeNames" value="mail"/>
                             <param name="mail.displayName" value="Email Address"/>
                             <param name="mail.readOnly" value="true"/>
@@ -121,6 +128,30 @@
                             <param name="sn.regExFailedMsg" value=""/>
                             <param name="sn.minChars" value="0"/>
                             <param name="sn.maxChars" value="0"/>
+                            <param name="attributeNames" value="adObjectGUID"/>
+                            <param name="adObjectGUID.displayName" value="Unique Identifier"/>
+                            <param name="adObjectGUID.readOnly" value="true"/>
+                            <param name="adObjectGUID.required" value="false"/>
+                            <param name="adObjectGUID.regEx" value=""/>
+                            <param name="adObjectGUID.regExFailedMsg" value=""/>
+                            <param name="adObjectGUID.minChars" value="0"/>
+                            <param name="adObjectGUID.maxChars" value="0"/>
+                            <param name="attributeNames" value="userPrincipalName"/>
+                            <param name="userPrincipalName.displayName" value="Login ID for Non SSH"/>
+                            <param name="userPrincipalName.readOnly" value="true"/>
+                            <param name="userPrincipalName.required" value="false"/>
+                            <param name="userPrincipalName.regEx" value=""/>
+                            <param name="userPrincipalName.regExFailedMsg" value=""/>
+                            <param name="userPrincipalName.minChars" value="0"/>
+                            <param name="userPrincipalName.maxChars" value="0"/>
+                            <param name="attributeNames" value="loginShell"/>
+                            <param name="loginShell.displayName" value="Login Shell"/>
+                            <param name="loginShell.readOnly" value="false"/>
+                            <param name="loginShell.required" value="true"/>
+                            <param name="loginShell.regEx" value=".*"/>
+                            <param name="loginShell.regExFailedMsg" value=""/>
+                            <param name="loginShell.minChars" value="0"/>
+                            <param name="loginShell.maxChars" value="0"/>
 
                         </filter>
           </filterChain>
@@ -141,7 +172,7 @@
             * dynamicGroup - The DN of the dynamic group in OpenUnison's virtual directory (must be an instance of groupOfUrls)
             * custom - An implementation of com.tremolosecurity.proxy.az.CustomAuthorization -->
           <azRules>
-            <rule scope="dn" constraint="o=Tremolo" />
+            <rule scope="dn" constraint="dc=domain,dc=com" />
           </azRules>
         </url>
         <url regex="false" authChain="formloginFilter" overrideHost="true" overrideReferer="true">
@@ -167,7 +198,7 @@
                       * dynamicGroup - The DN of the dynamic group in OpenUnison's virtual directory (must be an instance of groupOfUrls)
                       * custom - An implementation of com.tremolosecurity.proxy.az.CustomAuthorization -->
           <azRules>
-            <rule scope="dn" constraint="o=Tremolo" />
+            <rule scope="dn" constraint="dc=domain,dc=com" />
           </azRules>
         </url>
       </urls>
@@ -224,7 +255,7 @@
         </params>
       </authMech>
     </chain>
-    <chain name="formloginFilter" level="1">
+    <chain name="formloginFilter" level="1" root="dc=domain,dc=com">
       <authMech>
         <name>loginForm</name>
         <required>required</required>
@@ -232,7 +263,7 @@
           <!-- Path to the login form -->
           <param name="FORMLOGIN_JSP" value="/auth/forms/defaultForm.jsp"/>
           <!-- Either an attribute name OR an ldap filter mapping the form parameters. If this is an ldap filter, form parameters are identified by ${parameter} -->
-          <param name="uidAttr" value="uid"/>
+          <param name="uidAttr" value="userPrincipalName"/>
           <!-- If true, the user is determined based on an LDAP filter rather than a simple user lookup -->
           <param name="uidIsFilter" value="false"/>
         </params>
@@ -252,6 +283,18 @@
         <value>/auth/forms/logout.jsp</value>
       </result>
     </resultGroup>
+    !-- The name attribute is how the resultGroup is referenced in the URL -->
+    <resultGroup name="GoToScale">
+      <!-- Each result should be listed -->
+      <result>
+        <!-- The type of result, one of cookie, header or redirect -->
+        <type>redirect</type>
+        <!-- The source of the result value, one of user, static, custom -->
+        <source>static</source>
+        <!-- Name of the resuler (in this case a cookie) and the value -->
+        <value>/scale/index.html</value>
+      </result>
+    </resultGroup>
   </resultGroups>
   <keyStorePath>/etc/openunison/unisonKeyStore.jks</keyStorePath>
   <keyStorePassword>#[OPENUNISON_KEYSTORE_PASSWORD]</keyStorePassword>
@@ -265,6 +308,24 @@
         </params>
         <targetAttribute name="gecos" source="fullName" sourceType="user"/>
       </target>
+      <target name="rheldemo.lan-ldap" className="com.tremolosecurity.provisioning.core.providers.LDAPProvider">
+                <params>
+                    <param name="objectClass" value="posixUser"/>
+                    <param name="host" value="#[IPA_HOST]"/>
+                    <param name="port" value="389"/>
+                    <param name="adminDN" value="#[IPA_USER]"/>
+                    <param name="adminPasswd" value="#[IPA_PASSWORD]"/>
+                    <param name="dnPattern" value="cn=${never}"/>
+                    <param name="searchBase" value="#[IPA_BASE]"/>
+                    <param name="useSSL" value="false"/>
+                    <param name="userIDAttribute" value="carLicense"/>
+                    <param name="maxCons" value="10"/>
+                    <param name="threadsPerCons" value="10"/>
+                    <param name="idleTimeout" value="30000"/>
+                    <param name="allowExternalUsers" value="false"/>
+                </params>
+                <targetAttribute name="carLicense" source="carLicense" sourceType="user"/>
+            </target>
     </targets>
     <workflows>
       <workflow name="OpenShift" label="OpenShift Project $name$" description="Description - $openshift_io/display_name$" inList="true" orgid="e970818e-8889-4a87-a56d-ae1398d0b2f0">
@@ -320,7 +381,7 @@
       <password>#[OPENUNISON_AUDIT_DB_PASSWORD]</password>
       <maxConns>10</maxConns>
       <maxIdleConns>10</maxIdleConns>
-      <userIdAttribute>uid</userIdAttribute>
+      <userIdAttribute>adObjectGUID</userIdAttribute>
       <approverAttributes>
         <value>userPrincipalName</value>
         <value>mail</value>
